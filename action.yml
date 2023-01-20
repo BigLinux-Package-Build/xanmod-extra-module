@@ -1,0 +1,60 @@
+name: 'BigLinux XanMod Extra Modules'
+
+inputs:
+  repo:
+    required: true
+  mod:
+    required: true
+  mkdepends:
+    required: true
+  xanmod:
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: remake PKGBUILD
+      shell: bash
+      run: |
+        #variables
+        repo=${{ inputs.repo }}
+        mod=${{ inputs.mod }}
+        mkdepends=${{ inputs.mkdepends }}
+        xanmod=${{ inputs.xanmod }}
+
+        #clean workdir
+        rm -r *
+
+        xanmajor=$(curl -s https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=$xanmod | sed 's/<[^>]*>//g' | grep _major= | cut -d "=" -f2 | sed 's/\.//')
+
+        #clone extra module
+        git clone https://gitlab.manjaro.org/packages/extra/linux${xanmajor}-extramodules/${mod}.git
+
+        dir=$(ls)
+        mv ${dir}/* .
+        rm -r $dir
+
+        #_linuxprefix=
+        sed -i "s/_linuxprefix=.*/_linuxprefix=$xanmod/" PKGBUILD
+
+        #_extramodules=
+        xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | cut -d " " -f2 | cut -d "-" -f1)
+        find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
+        sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
+
+        #pkgrel=
+        xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
+        sed -i 's/pkgrel=.*/pkgrel='"${xanversemponto}"'/' PKGBUILD
+
+        #_kernver=
+        sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
+
+        #pkgver
+        pkgver=$(pacman -Ss $mkdepends| grep $mkdepends | grep -v "\-${mkdepends}" | cut -d " " -f2 | sed "s|-.*||")
+        sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
+
+        #sha256sums=
+        sed -i 's/sha256sums=.*/sha256sums=(SKIP)/' PKGBUILD
+        
+        #.install
+        sed -i 's/EXTRAMODULES=.*/EXTRAMODULES=$('"$find"')/;s/depmod.*/depmod $('"$find"')/' *.install

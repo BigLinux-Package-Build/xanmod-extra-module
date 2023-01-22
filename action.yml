@@ -128,12 +128,12 @@ runs:
         sudo mkdir -p /etc/pacman.d/gnupg/
         sudo cp -r biglinux-key/usr/share/pacman/keyrings/* /etc/pacman.d/gnupg/
         sudo rm -r biglinux-key
-        # sudo pacman -Sy
+        sudo pacman -Sy
         
         
-    # Tmate ##
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+    # # Tmate ##
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v3
         
     - name: remake PKGBUILD
       shell: bash

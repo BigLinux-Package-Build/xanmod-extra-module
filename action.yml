@@ -73,6 +73,20 @@ runs:
         [biglinux-stable]
         SigLevel = PackageRequired
         Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /etc/pacman.conf
+        
+        #Mirrorlist
+        echo 'Server = https://mirror.fcix.net/manjaro/stable/$repo/$arch
+        Server = https://irltoolkit.mm.fcix.net/manjaro/stable/$repo/$arch
+        Server = https://uvermont.mm.fcix.net/manjaro/stable/$repo/$arch
+        Server = https://ziply.mm.fcix.net/manjaro/stable/$repo/$arch
+        Server = https://repo.ialab.dsu.edu/manjaro/stable/$repo/$arch
+        Server = https://mnvoip.mm.fcix.net/manjaro/stable/$repo/$arch
+        Server = https://forksystems.mm.fcix.net/manjaro/stable/$repo/$arch
+        Server = https://codingflyboy.mm.fcix.net/manjaro/stable/$repo/$arch
+        Server = https://coresite.mm.fcix.net/manjaro/stable/$repo/$arch
+        Server = https://ridgewireless.mm.fcix.net/manjaro/stable/$repo/$arch
+        Server = https://opencolo.mm.fcix.net/manjaro/stable/$repo/$arch
+        Server = https://southfront.mm.fcix.net/manjaro/stable/$repo/$arch' | sudo tee -a /etc/pacman.d/mirrorlist
     
     - name: install keyrings
       shell: bash

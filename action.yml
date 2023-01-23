@@ -189,7 +189,8 @@ runs:
             sed -i '22,23s/.*//' PKGBUILD
           elif [ "$mod" = "r8168" ];then
             sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')/" PKGBUILD
-            sed -i '25,26,27s/.*//' PKGBUILD
+            sed -i '25,26s/.*//' PKGBUILD
+            sed -i '27s/.*//' PKGBUILD
           elif [ "$mod" = "rtl8723bu" ];then
             sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/" PKGBUILD
             sed -i '29,30s/.*//' PKGBUILD

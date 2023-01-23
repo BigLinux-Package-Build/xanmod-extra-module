@@ -138,7 +138,7 @@ runs:
     - name: remake PKGBUILD
       shell: bash
       run: |
-        #variables
+        echo "variables"
         repo=${{ inputs.repo }}
         mod=${{ inputs.mod }}
         mkdepends=${{ inputs.mkdepends }}
@@ -149,38 +149,38 @@ runs:
 
         xanmajor=$(curl -s https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=$xanmod | sed 's/<[^>]*>//g' | grep _major= | cut -d "=" -f2 | sed 's/\.//')
 
-        #clone extra module
+        echo "clone extra module"
         git clone https://gitlab.manjaro.org/packages/extra/linux${xanmajor}-extramodules/${mod}.git
 
         dir=$(ls)
         mv ${dir}/* .
         rm -r $dir
 
-        #_linuxprefix=
+        echo "_linuxprefix="
         sed -i "s/_linuxprefix=.*/_linuxprefix=$xanmod/" PKGBUILD
 
-        #_extramodules=
+        echo "_extramodules="
         xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | cut -d " " -f2 | cut -d "-" -f1)
         find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
         sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
 
-        #pkgrel=
+        echo "pkgrel="
         xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
         sed -i 's/pkgrel=.*/pkgrel='"${xanversemponto}"'/' PKGBUILD
 
-        #_kernver=
+        echo "_kernver="
         sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
         
-        #pkgver
+        echo "pkgver"
         if [ -n "$mkdepends" ];then 
           pkgver=$(pacman -Ss $mkdepends| grep $mkdepends | grep -v "\-${mkdepends}" | cut -d " " -f2 | sed "s|-.*||")
           sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
         fi
         
-        #_extraver
+        echo "_extraver"
         sed -i 's/<\/usr\/lib\/modules\/${_extraver}\/version/'"$find"'/' PKGBUILD
         
-        #sha256sums=
+        echo "sha256sums="
         # sed -i 's/sha256sums=.*/sha256sums=('SKIP')/' PKGBUILD
         
         if [ "$xanmod" = "linux-xandmo" ];then
@@ -221,7 +221,7 @@ runs:
         fi
         
         
-        #.install
+        echo ".install"
         sed -i 's/EXTRAMODULES=.*/EXTRAMODULES=$('"$find"')/;s/depmod.*/depmod $('"$find"')/' *.install
         
         

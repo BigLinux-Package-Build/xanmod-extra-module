@@ -214,7 +214,7 @@ runs:
             sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
             sed -i '26s/.*//' PKGBUILD
           elif [ "$mod" = "zfs" ];then
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP')/" PKGBUILD
+            sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
             sed -i '21s/.*//' PKGBUILD
           else
             sed -i "s/sha256sums=.*/sha256sums=('SKIP')/" PKGBUILD

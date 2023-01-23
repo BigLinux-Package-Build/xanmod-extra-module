@@ -203,7 +203,7 @@ runs:
           else
             sed -i "s/sha256sums=.*/sha256sums=('SKIP')/" PKGBUILD
           fi
-        elif [ "$xandmo" = "linux-xanmod-lts" ];then
+        elif [ "$xanmod" = "linux-xanmod-lts" ];then
           if [ "$mod" = "bbswitch" ];then
             sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
             sed -i '22,23s/.*//' PKGBUILD

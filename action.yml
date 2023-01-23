@@ -183,7 +183,7 @@ runs:
         echo "sha256sums="
         # sed -i 's/sha256sums=.*/sha256sums=('SKIP')/' PKGBUILD
         
-        if [ "$xanmod" = "linux-xandmo" ];then
+        if [ "$xanmod" = "linux-xanmod" ];then
           if [ "$mod" = "bbswitch" ];then
             sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/" PKGBUILD
             sed -i '22,23s/.*//' PKGBUILD

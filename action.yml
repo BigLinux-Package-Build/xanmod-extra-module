@@ -178,10 +178,27 @@ runs:
         fi
         
         #sha256sums=
-        sed -i 's/sha256sums=.*/sha256sums=(SKIP)/' PKGBUILD
-        if [ "$mod" = "zfs" ];then
-            sed -i '22,23s/.*//' PKGBUILD
+        # sed -i 's/sha256sums=.*/sha256sums=('SKIP')/' PKGBUILD
+        
+        if [ "$mod" = "bbswitch" ];then
+          sed -i 's/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/' PKGBUILD
+          sed -i '22,23s/.*//' PKGBUILD
+        elif [ "$mod" = "r8168" ];then
+          sed -i 's/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')/' PKGBUILD
+           sed -i '25,26,27s/.*//' PKGBUILD
+        elif [ "$mod" = "rtl8723bu" ];then
+          sed -i 's/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/' PKGBUILD
+          sed -i '29,30s/.*//' PKGBUILD
+        elif [ "$mod" = "vhba-module" ];then
+          sed -i 's/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/' PKGBUILD
+          sed -i '26s/.*//' PKGBUILD 
+        elif [ "$mod" = "zfs" ];then
+          sed -i 's/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/' PKGBUILD
+          sed -i '22,23s/.*//' PKGBUILD
+        else
+          sed -i 's/sha256sums=.*/sha256sums=('SKIP')/' PKGBUILD
         fi
+        
         
         #.install
         sed -i 's/EXTRAMODULES=.*/EXTRAMODULES=$('"$find"')/;s/depmod.*/depmod $('"$find"')/' *.install

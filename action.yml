@@ -177,6 +177,9 @@ runs:
           sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
         fi
         
+        #_extraver
+        sed -i 's/<\/usr\/lib\/modules\/${_extraver}\/version/'"$find"'/' PKGBUILD
+        
         #sha256sums=
         # sed -i 's/sha256sums=.*/sha256sums=('SKIP')/' PKGBUILD
         

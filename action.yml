@@ -179,6 +179,9 @@ runs:
         
         #sha256sums=
         sed -i 's/sha256sums=.*/sha256sums=(SKIP)/' PKGBUILD
+        if [ "$mod" = "zfs" ]then
+            sed -i '22,23s/.*//' PKGBUILD
+        fi
         
         #.install
         sed -i 's/EXTRAMODULES=.*/EXTRAMODULES=$('"$find"')/;s/depmod.*/depmod $('"$find"')/' *.install

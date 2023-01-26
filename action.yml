@@ -75,18 +75,7 @@ runs:
         Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /etc/pacman.conf
         
         #Mirrorlist
-        echo 'Server = https://mirror.fcix.net/manjaro/stable/$repo/$arch
-        Server = https://irltoolkit.mm.fcix.net/manjaro/stable/$repo/$arch
-        Server = https://uvermont.mm.fcix.net/manjaro/stable/$repo/$arch
-        Server = https://ziply.mm.fcix.net/manjaro/stable/$repo/$arch
-        Server = https://repo.ialab.dsu.edu/manjaro/stable/$repo/$arch
-        Server = https://mnvoip.mm.fcix.net/manjaro/stable/$repo/$arch
-        Server = https://forksystems.mm.fcix.net/manjaro/stable/$repo/$arch
-        Server = https://codingflyboy.mm.fcix.net/manjaro/stable/$repo/$arch
-        Server = https://coresite.mm.fcix.net/manjaro/stable/$repo/$arch
-        Server = https://ridgewireless.mm.fcix.net/manjaro/stable/$repo/$arch
-        Server = https://opencolo.mm.fcix.net/manjaro/stable/$repo/$arch
-        Server = https://southfront.mm.fcix.net/manjaro/stable/$repo/$arch' | sudo tee -a /etc/pacman.d/mirrorlist
+        echo 'Server = https://mnvoip.mm.fcix.net/manjaro/testing/$repo/$arch' | sudo tee -a /etc/pacman.d/mirrorlist
     
     - name: install keyrings
       shell: bash
@@ -138,7 +127,9 @@ runs:
     - name: remake PKGBUILD
       shell: bash
       run: |
-        echo "variables"
+        echo "remake PKGBUILD"
+        
+        #variables
         repo=${{ inputs.repo }}
         mod=${{ inputs.mod }}
         mkdepends=${{ inputs.mkdepends }}
@@ -149,38 +140,38 @@ runs:
 
         xanmajor=$(curl -s https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=$xanmod | sed 's/<[^>]*>//g' | grep _major= | cut -d "=" -f2 | sed 's/\.//')
 
-        echo "clone extra module"
+        echo "#clone extra module"
         git clone https://gitlab.manjaro.org/packages/extra/linux${xanmajor}-extramodules/${mod}.git
 
         dir=$(ls)
         mv ${dir}/* .
         rm -r $dir
 
-        echo "_linuxprefix="
+        echo "#_linuxprefix="
         sed -i "s/_linuxprefix=.*/_linuxprefix=$xanmod/" PKGBUILD
 
-        echo "_extramodules="
+        echo "#_extramodules="
         xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | cut -d " " -f2 | cut -d "-" -f1)
         find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
         sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
 
-        echo "pkgrel="
+        echo "#pkgrel="
         xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
         sed -i 's/pkgrel=.*/pkgrel='"${xanversemponto}"'/' PKGBUILD
 
-        echo "_kernver="
+        echo "#_kernver="
         sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
         
-        echo "pkgver"
+        echo "#pkgver"
         if [ -n "$mkdepends" ];then 
           pkgver=$(pacman -Ss $mkdepends| grep $mkdepends | grep -v "\-${mkdepends}" | cut -d " " -f2 | sed "s|-.*||")
           sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
         fi
         
-        echo "_extraver"
+        echo "#_extraver"
         sed -i 's/<\/usr\/lib\/modules\/${_extraver}\/version/'"$find"'/' PKGBUILD
         
-        echo "sha256sums="
+        echo "#sha256sums="
         # sed -i 's/sha256sums=.*/sha256sums=('SKIP')/' PKGBUILD
         
         if [ "$xanmod" = "linux-xanmod" ];then
@@ -222,7 +213,7 @@ runs:
         fi
         
         
-        echo ".install"
+        echo "#.install"
         sed -i 's/EXTRAMODULES=.*/EXTRAMODULES=$('"$find"')/;s/depmod.*/depmod $('"$find"')/' *.install
         
         

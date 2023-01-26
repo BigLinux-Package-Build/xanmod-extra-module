@@ -151,67 +151,64 @@ runs:
         sed -i "s/_linuxprefix=.*/_linuxprefix=$xanmod/" PKGBUILD
 
         echo "#_extramodules="
-        xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | cut -d " " -f2 | cut -d "-" -f1)
+        xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep -v $xanmod | cut -d " " -f2 | cut -d "-" -f1)
         find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
         sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
 
         echo "#pkgrel="
-        xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
+        xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep -v $xanmod | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
         sed -i 's/pkgrel=.*/pkgrel='"${xanversemponto}"'/' PKGBUILD
 
-        echo "#_kernver="
-        sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
-        
-        echo "#pkgver"
-        if [ -n "$mkdepends" ];then 
-          pkgver=$(pacman -Ss $mkdepends| grep $mkdepends | grep -v "\-${mkdepends}" | cut -d " " -f2 | sed "s|-.*||")
-          sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
-        fi
+        # echo "#_kernver="
+        # sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
+        # echo "#pkgver"
+        # if [ -n "$mkdepends" ];then 
+        #   pkgver=$(pacman -Ss $mkdepends| grep $mkdepends | grep -v "\-${mkdepends}" | cut -d " " -f2 | sed "s|-.*||")
+        #   sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
+        # fi
         
         echo "#_extraver"
         sed -i 's/<\/usr\/lib\/modules\/${_extraver}\/version/'"$find"'/' PKGBUILD
         
-        echo "#sha256sums="
-        # sed -i 's/sha256sums=.*/sha256sums=('SKIP')/' PKGBUILD
-        
-        if [ "$xanmod" = "linux-xanmod" ];then
-          if [ "$mod" = "bbswitch" ];then
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/" PKGBUILD
-            sed -i '22,23s/.*//' PKGBUILD
-          elif [ "$mod" = "r8168" ];then
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')/" PKGBUILD
-            sed -i '25,26s/.*//' PKGBUILD
-            sed -i '27s/.*//' PKGBUILD
-          elif [ "$mod" = "rtl8723bu" ];then
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/" PKGBUILD
-            sed -i '29,30s/.*//' PKGBUILD
-          elif [ "$mod" = "vhba-module" ];then
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
-            sed -i '26s/.*//' PKGBUILD 
-          elif [ "$mod" = "zfs" ];then
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/" PKGBUILD
-            sed -i '22,23s/.*//' PKGBUILD
-          else
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP')/" PKGBUILD
-          fi
-        elif [ "$xanmod" = "linux-xanmod-lts" ];then
-          if [ "$mod" = "bbswitch" ];then
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
-            sed -i '22s/.*//' PKGBUILD
-          elif [ "$mod" = "rtl8723bu" ];then
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
-            sed -i '28s/.*//' PKGBUILD
-          elif [ "$mod" = "vhba-module" ];then
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
-            sed -i '26s/.*//' PKGBUILD
-          elif [ "$mod" = "zfs" ];then
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
-            sed -i '21s/.*//' PKGBUILD
-          else
-            sed -i "s/sha256sums=.*/sha256sums=('SKIP')/" PKGBUILD
-          fi
-        fi
-        
+        # echo "#sha256sums="
+        # # sed -i 's/sha256sums=.*/sha256sums=('SKIP')/' PKGBUILD
+        # if [ "$xanmod" = "linux-xanmod" ];then
+        #   if [ "$mod" = "bbswitch" ];then
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/" PKGBUILD
+        #     sed -i '22,23s/.*//' PKGBUILD
+        #   elif [ "$mod" = "r8168" ];then
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')/" PKGBUILD
+        #     sed -i '25,26s/.*//' PKGBUILD
+        #     sed -i '27s/.*//' PKGBUILD
+        #   elif [ "$mod" = "rtl8723bu" ];then
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/" PKGBUILD
+        #     sed -i '29,30s/.*//' PKGBUILD
+        #   elif [ "$mod" = "vhba-module" ];then
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
+        #     sed -i '26s/.*//' PKGBUILD 
+        #   elif [ "$mod" = "zfs" ];then
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP' 'SKIP')/" PKGBUILD
+        #     sed -i '22,23s/.*//' PKGBUILD
+        #   else
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP')/" PKGBUILD
+        #   fi
+        # elif [ "$xanmod" = "linux-xanmod-lts" ];then
+        #   if [ "$mod" = "bbswitch" ];then
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
+        #     sed -i '22s/.*//' PKGBUILD
+        #   elif [ "$mod" = "rtl8723bu" ];then
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
+        #     sed -i '28s/.*//' PKGBUILD
+        #   elif [ "$mod" = "vhba-module" ];then
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
+        #     sed -i '26s/.*//' PKGBUILD
+        #   elif [ "$mod" = "zfs" ];then
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP' 'SKIP')/" PKGBUILD
+        #     sed -i '21s/.*//' PKGBUILD
+        #   else
+        #     sed -i "s/sha256sums=.*/sha256sums=('SKIP')/" PKGBUILD
+        #   fi
+        # fi
         
         echo "#.install"
         sed -i 's/EXTRAMODULES=.*/EXTRAMODULES=$('"$find"')/;s/depmod.*/depmod $('"$find"')/' *.install

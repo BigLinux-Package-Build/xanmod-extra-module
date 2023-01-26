@@ -151,16 +151,17 @@ runs:
         sed -i "s/_linuxprefix=.*/_linuxprefix=$xanmod/" PKGBUILD
 
         echo "#_extramodules="
-        xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep -v $xanmod | cut -d " " -f2 | cut -d "-" -f1)
+        xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | cut -d "-" -f1)
         find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
         sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
 
         echo "#pkgrel="
-        xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep -v $xanmod | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
+        xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
         sed -i 's/pkgrel=.*/pkgrel='"${xanversemponto}"'/' PKGBUILD
 
         # echo "#_kernver="
-        # sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
+        sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
+        
         # echo "#pkgver"
         # if [ -n "$mkdepends" ];then 
         #   pkgver=$(pacman -Ss $mkdepends| grep $mkdepends | grep -v "\-${mkdepends}" | cut -d " " -f2 | sed "s|-.*||")

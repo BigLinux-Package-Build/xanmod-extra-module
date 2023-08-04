@@ -68,12 +68,12 @@ runs:
         echo '
         [biglinux-testing]
         SigLevel = PackageRequired
-        Server = https://${{ secrets.REPOSITORY }}.biglinux.com.br/testing/$arch' | sudo tee -a /etc/pacman.conf
+        Server = https://'${{ secrets.REPOSITORY }}'.biglinux.com.br/testing/$arch' | sudo tee -a /etc/pacman.conf
         Server = https://repo.biglinux.com.br/testing/$arch' | sudo tee -a /etc/pacman.conf
         echo '
         [biglinux-stable]
         SigLevel = PackageRequired
-        Server = https://${{ secrets.REPOSITORY }}.biglinux.com.br/stable/$arch' | sudo tee -a /etc/pacman.conf
+        Server = https://'${{ secrets.REPOSITORY }}'.biglinux.com.br/stable/$arch' | sudo tee -a /etc/pacman.conf
         Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /etc/pacman.conf
         
         #Mirrorlist

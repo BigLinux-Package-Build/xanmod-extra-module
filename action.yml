@@ -147,10 +147,25 @@ runs:
 
         echo "#clone extra module"
         git clone https://gitlab.manjaro.org/packages/extra/linux${xanmajor}-extramodules/${mod}.git
-
+        
         dir=$(ls)
         mv ${dir}/* .
         rm -r $dir
+
+        if [ -n "$mkdepends" ];then
+          mkDependsRepoVer=$(pacman -Ss ${mkdepend} | sed 's/\.//g' | grep ${mkdepend} | grep -v "\-${mkdepend}" | cut -d " " -f2 | cut -d "-" -f1 | sed 's/.*://')
+          mkDependsGitVer=$(grep pkgver= PKGBUILD | cut -d "=" -f2 | sed 's/\.//g')
+          echo "mkDependsRepoVer=$mkDependsRepoVer"
+          echo "mkDependsGitVer=$mkDependsGitVer"
+          
+          if [ "$mkDependsRepoVer" != "$mkDependsGitVer" ];then
+            echo "Sem atualiza de versão"
+            echo "SAINDO...."
+            curl -s -H "Authorization: token ${{ github.token }}" \
+            -X POST "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
+            sleep infinity
+          fi
+        fi
 
         echo "#_linuxprefix="
         sed -i "s/_linuxprefix=.*/_linuxprefix=$xanmod/" PKGBUILD

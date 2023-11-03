@@ -152,18 +152,16 @@ runs:
         mv ${dir}/* .
         rm -r $dir
 
+        # se o mod tiver dependecia extras
         if [ -n "$mkdepends" ];then
-          mkDependsRepoVer=$(pacman -Ss ${mkdepend} | sed 's/\.//g' | grep ${mkdepend} | grep -v "\-${mkdepend}" | cut -d " " -f2 | cut -d "-" -f1 | sed 's/.*://')
-          mkDependsGitVer=$(grep pkgver= PKGBUILD | cut -d "=" -f2 | sed 's/\.//g')
+          mkDependsRepoVer=$(pacman -Ss ${mkdepends} | grep ${mkdepends} | grep -v "\-${mkdepends}" | cut -d " " -f2 | cut -d "-" -f1 | sed 's/.*://')
+          mkDependsGitVer=$(grep pkgver= PKGBUILD | cut -d "=" -f2)
           echo "mkDependsRepoVer=$mkDependsRepoVer"
-          echo "mkDependsGitVer=$mkDependsGitVer"
+          echo "mkDependsGitVer =$mkDependsGitVer"
           
+          #se a versão da dependencia extra for diferente da versão do repo stable do manjaro
           if [ "$mkDependsRepoVer" != "$mkDependsGitVer" ];then
-            echo "Sem atualiza de versão"
-            echo "SAINDO...."
-            curl -s -H "Authorization: token ${{ github.token }}" \
-            -X POST "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/cancel"
-            sleep infinity
+            sed -i "/pkgver=/s/pkgver=.*/pkgver=$mkDependsRepoVer/" PKGBUILD
           fi
         fi
 

@@ -79,8 +79,8 @@ runs:
         Server = https://repo.biglinux.com.br/stable/$arch' | sudo tee -a /etc/pacman.conf
         
         #Mirrorlist
-        # echo 'Server = https://mnvoip.mm.fcix.net/manjaro/stable/$repo/$arch' | sudo tee -a /etc/pacman.d/mirrorlist
-        echo 'Server = https://mnvoip.mm.fcix.net/manjaro/testing/$repo/$arch' | sudo tee -a /etc/pacman.d/mirrorlist
+        echo 'Server = https://mnvoip.mm.fcix.net/manjaro/stable/$repo/$arch' | sudo tee -a /etc/pacman.d/mirrorlist
+        # echo 'Server = https://mnvoip.mm.fcix.net/manjaro/testing/$repo/$arch' | sudo tee -a /etc/pacman.d/mirrorlist
     
     - name: install keyrings
       shell: bash

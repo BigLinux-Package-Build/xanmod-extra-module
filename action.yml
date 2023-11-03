@@ -162,6 +162,7 @@ runs:
           #se a versão da dependencia extra for diferente da versão do repo stable do manjaro
           if [ "$mkDependsRepoVer" != "$mkDependsGitVer" ];then
             sed -i "/pkgver=/s/pkgver=.*/pkgver=$mkDependsRepoVer/" PKGBUILD
+            sed -i '/sha256sums=/s/sha256sums=.*/sha256sums=(SKIP)/' PKGBUILD
           fi
         fi
 

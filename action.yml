@@ -178,7 +178,7 @@ runs:
         xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
         sed -i 's/pkgrel=.*/pkgrel='"${xanversemponto}"'/' PKGBUILD
         #se o numero da versão contiver apenas 4 caracteres, adicionar um 0 ao final da versão
-        if [ "${#xanversemponto}" -le "4" ]; then 
+        if [ "${#xanversemponto}" -le "4" ]; then
           sed -i '/pkgrel=/s/$/0/' PKGBUILD
         fi
 
@@ -192,8 +192,8 @@ runs:
         #   sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
         # fi
         
-        # echo "#_extraver"
-        # sed -i 's/<\/usr\/lib\/modules\/${_extraver}\/version/'"$find"'/' PKGBUILD
+        echo "#_extraver"
+        sed -i 's/<\/usr\/lib\/modules\/${_extraver}\/version/'"$find"'/' PKGBUILD
         
         # echo "#sha256sums="
         # # sed -i 's/sha256sums=.*/sha256sums=('SKIP')/' PKGBUILD

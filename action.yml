@@ -169,10 +169,10 @@ runs:
         echo "#_linuxprefix="
         sed -i "s/_linuxprefix=.*/_linuxprefix=$xanmod/" PKGBUILD
 
-        echo "#_extramodules="
-        xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | cut -d "-" -f1)
-        find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
-        sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
+        #echo "#_extramodules="
+        # xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | cut -d "-" -f1)
+        # find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
+        # sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
 
         echo "#pkgrel="
         xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
@@ -182,8 +182,9 @@ runs:
           sed -i '/pkgrel=/s/$/0/' PKGBUILD
         fi
 
-        # echo "#_kernver="
-        sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
+        echo "#_kernver="
+        # sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
+        sed -i 's/version/\/build/version/' PKGBUILD
         
         # echo "#pkgver"
         # if [ -n "$mkdepends" ];then 
@@ -191,8 +192,8 @@ runs:
         #   sed -i "s/pkgver=.*/pkgver=${pkgver}/" PKGBUILD
         # fi
         
-        echo "#_extraver"
-        sed -i 's/<\/usr\/lib\/modules\/${_extraver}\/version/'"$find"'/' PKGBUILD
+        # echo "#_extraver"
+        # sed -i 's/<\/usr\/lib\/modules\/${_extraver}\/version/'"$find"'/' PKGBUILD
         
         # echo "#sha256sums="
         # # sed -i 's/sha256sums=.*/sha256sums=('SKIP')/' PKGBUILD
@@ -234,7 +235,7 @@ runs:
         #   fi
         # fi
         
-        echo "#.install"
-        sed -i 's/EXTRAMODULES=.*/EXTRAMODULES=$('"$find"')/;s/depmod.*/depmod $('"$find"')/' *.install
+        # echo "#.install"
+        # sed -i 's/EXTRAMODULES=.*/EXTRAMODULES=$('"$find"')/;s/depmod.*/depmod $('"$find"')/' *.install
         
         

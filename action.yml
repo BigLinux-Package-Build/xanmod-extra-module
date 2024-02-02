@@ -170,8 +170,8 @@ runs:
         sed -i "s/_linuxprefix=.*/_linuxprefix=$xanmod/" PKGBUILD
 
         #echo "#_extramodules="
-        # xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | cut -d "-" -f1)
-        # find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
+        xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | cut -d "-" -f1)
+        find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
         # sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
 
         echo "#pkgrel="
@@ -183,8 +183,8 @@ runs:
         fi
 
         echo "#_kernver="
-        # sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
-        sed -i 's/version/\/build\/version/' PKGBUILD
+        sed -i 's/_kernver=.*/_kernver=$('"$find"')/' PKGBUILD
+        
         
         # echo "#pkgver"
         # if [ -n "$mkdepends" ];then 

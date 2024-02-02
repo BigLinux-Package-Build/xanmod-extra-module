@@ -172,7 +172,7 @@ runs:
         echo "#_extramodules="
         xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | cut -d "-" -f1)
         find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
-        # sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
+        sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
 
         echo "#pkgrel="
         xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')

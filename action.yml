@@ -68,6 +68,10 @@ runs:
         sudo sed -i '/\[core\]/{h;s/.*/Server = https:\/\/repo.biglinux.com.br\/update-stable\/$arch/;p;x;}' /etc/pacman.conf
         sudo sed -i '/\[core\]/{h;s/.*//;p;x;}' /etc/pacman.conf
         echo '
+        [bigiborg-'"${repo_dev}"']
+        SigLevel = PackageRequired
+        Server = https://'"$mirror_unstable"'/$arch' | sudo tee -a /etc/pacman.conf
+        echo '
         [biglinux-testing]
         SigLevel = PackageRequired
         Server = https://'${{ inputs.repoServer }}'.biglinux.com.br/testing/$arch
@@ -140,6 +144,12 @@ runs:
         mkdepends=${{ inputs.mkdepends }}
         xanmod=${{ inputs.xanmod }}
 
+        if [ "$repo" = "unstable" ];then
+            name=bigiborg
+        else
+            name=biglinux
+        fi
+
         #clean workdir
         rm -r *
 
@@ -170,12 +180,12 @@ runs:
         sed -i "s/_linuxprefix=.*/_linuxprefix=$xanmod/" PKGBUILD
 
         echo "#_extramodules="
-        xanverponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | cut -d "-" -f1)
+        xanverponto=$(pacman -Ss $xanmod | grep ${name}-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | cut -d "-" -f1)
         find="find \/usr\/lib\/modules -type d -iname "${xanverponto}*xanmod*" | rev | cut -d "'"\/"'" -f1 | rev"
         sed -i 's/_extramodules=.*/_extramodules=$('"$find"')/' PKGBUILD
 
         echo "#pkgrel="
-        xanversemponto=$(pacman -Ss $xanmod | grep biglinux-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
+        xanversemponto=$(pacman -Ss $xanmod | grep ${name}-${repo} | grep -v headers | grep -v "$xanmod-" | grep $xanmod | cut -d " " -f2 | sed 's/\.//g' | sed 's/\-//g')
         sed -i 's/pkgrel=.*/pkgrel='"${xanversemponto}"'/' PKGBUILD
         #se o numero da versão contiver apenas 4 caracteres, adicionar um 0 ao final da versão
         if [ "${#xanversemponto}" -le "4" ]; then
